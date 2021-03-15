@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// cat.sol -- Dai liquidation module
+/// cat.sol -- dotBtc liquidation module
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -69,8 +69,8 @@ contract Cat is LibNote {
     uint256 public live;   // Active Flag
     VatLike public vat;    // CDP Engine
     VowLike public vow;    // Debt Engine
-    uint256 public box;    // Max Dai out for liquidation        [rad]
-    uint256 public litter; // Balance of Dai out for liquidation [rad]
+    uint256 public box;    // Max dotBtc out for liquidation        [rad]
+    uint256 public litter; // Balance of dotBtc out for liquidation [rad]
 
     // --- Events ---
     event Bite(

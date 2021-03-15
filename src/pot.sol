@@ -22,17 +22,17 @@ pragma solidity >=0.5.12;
 import "./lib.sol";
 
 /*
-   "Savings Dai" is obtained when Dai is deposited into
-   this contract. Each "Savings Dai" accrues Dai interest
-   at the "Dai Savings Rate".
+   "Savings Dai" is obtained when dotBtc is deposited into
+   this contract. Each "Savings dotBtc" accrues dotBtc interest
+   at the "dotBtc Savings Rate".
 
    This contract does not implement a user tradeable token
    and is intended to be used with adapters.
 
          --- `save` your `dai` in the `pot` ---
 
-   - `dsr`: the Dai Savings Rate
-   - `pie`: user balance of Savings Dai
+   - `dsr`: the dotBtc Savings Rate
+   - `pie`: user balance of Savings dotBtc
 
    - `join`: start saving some dai
    - `exit`: remove some dai
@@ -56,10 +56,10 @@ contract Pot is LibNote {
     }
 
     // --- Data ---
-    mapping (address => uint256) public pie;  // Normalised Savings Dai [wad]
+    mapping (address => uint256) public pie;  // Normalised Savings dotBtc [wad]
 
-    uint256 public Pie;   // Total Normalised Savings Dai  [wad]
-    uint256 public dsr;   // The Dai Savings Rate          [ray]
+    uint256 public Pie;   // Total Normalised Savings dotBtc  [wad]
+    uint256 public dsr;   // The dotBtc Savings Rate          [ray]
     uint256 public chi;   // The Rate Accumulator          [ray]
 
     VatLike public vat;   // CDP Engine
@@ -74,7 +74,7 @@ contract Pot is LibNote {
         vat = VatLike(vat_);
         dsr = ONE;
         chi = ONE;
-        rho = now;
+        rho = block.timestamp;
         live = 1;
     }
 
@@ -123,7 +123,7 @@ contract Pot is LibNote {
     // --- Administration ---
     function file(bytes32 what, uint256 data) external note auth {
         require(live == 1, "Pot/not-live");
-        require(now == rho, "Pot/rho-not-updated");
+        require(block.timestamp == rho, "Pot/rho-not-updated");
         if (what == "dsr") dsr = data;
         else revert("Pot/file-unrecognized-param");
     }
@@ -140,17 +140,17 @@ contract Pot is LibNote {
 
     // --- Savings Rate Accumulation ---
     function drip() external note returns (uint tmp) {
-        require(now >= rho, "Pot/invalid-now");
-        tmp = rmul(rpow(dsr, now - rho, ONE), chi);
+        require(block.timestamp >= rho, "Pot/invalid-block.timestamp");
+        tmp = rmul(rpow(dsr, block.timestamp - rho, ONE), chi);
         uint chi_ = sub(tmp, chi);
         chi = tmp;
-        rho = now;
+        rho = block.timestamp;
         vat.suck(address(vow), address(this), mul(Pie, chi_));
     }
 
-    // --- Savings Dai Management ---
+    // --- Savings dotBtc Management ---
     function join(uint wad) external note {
-        require(now == rho, "Pot/rho-not-updated");
+        require(block.timestamp == rho, "Pot/rho-not-updated");
         pie[msg.sender] = add(pie[msg.sender], wad);
         Pie             = add(Pie,             wad);
         vat.move(msg.sender, address(this), mul(chi, wad));

@@ -290,7 +290,7 @@ contract EndTest is DSTest {
         assertEq(gem("gold", urn1), 7 ether);
         ali.exit(gold.gemA, address(this), 7 ether);
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         end.thaw();
         end.flow("gold");
         assertTrue(end.fix("gold") != 0);
@@ -363,7 +363,7 @@ contract EndTest is DSTest {
         assertEq(gem("gold", urn1), 2.5 ether);
         ali.exit(gold.gemA, address(this), 2.5 ether);
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         end.thaw();
         end.flow("gold");
         assertTrue(end.fix("gold") != 0);
@@ -419,10 +419,10 @@ contract EndTest is DSTest {
         ali.frob("gold", urn1, urn1, urn1, 10 ether, 15 ether);
         // this urn has 0 gem, 10 ink, 15 tab, 15 dai
 
-        vat.file("gold", "spot", ray(1 ether));     // now unsafe
+        vat.file("gold", "spot", ray(1 ether));     // block.timestamp unsafe
 
         uint auction = cat.bite("gold", urn1);  // CDP liquidated
-        assertEq(vat.vice(), rad(15 ether));    // now there is sin
+        assertEq(vat.vice(), rad(15 ether));    // block.timestamp there is sin
         // get 1 dai from ali
         ali.move(address(ali), address(this), rad(1 ether));
         vat.hope(address(gold.flip));
@@ -458,7 +458,7 @@ contract EndTest is DSTest {
         assertEq(gem("gold", urn1), 7 ether);
         ali.exit(gold.gemA, address(this), 7 ether);
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         end.thaw();
         end.flow("gold");
         assertTrue(end.fix("gold") != 0);
@@ -523,7 +523,7 @@ contract EndTest is DSTest {
         assertEq(gem("gold", urn1), 7 ether);
         ali.exit(gold.gemA, address(this), 7 ether);
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         end.thaw();
         end.flow("gold");
         assertTrue(end.fix("gold") != 0);
@@ -599,7 +599,7 @@ contract EndTest is DSTest {
         assertEq(gem("gold", urn1), 2.5 ether);
         ali.exit(gold.gemA, address(this), 2.5 ether);
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         // balance the vow
         vow.heal(rad(1 ether));
         end.thaw();
@@ -677,7 +677,7 @@ contract EndTest is DSTest {
         end.skim("gold", urn1);  // over-collateralised
         end.skim("coal", urn2);  // under-collateralised
 
-        hevm.warp(now + 1 hours);
+        hevm.warp(block.timestamp + 1 hours);
         end.thaw();
         end.flow("gold");
         end.flow("coal");

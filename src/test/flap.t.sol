@@ -108,7 +108,7 @@ contract FlapTest is DSTest {
         // excess remains in auction
         assertEq(gem.balanceOf(address(flap)),   2 ether);
 
-        hevm.warp(now + 5 weeks);
+        hevm.warp(block.timestamp + 5 weeks);
         Guy(bob).deal(id);
         // high bidder gets the lot
         assertEq(vat.dai(address(flap)),  0 ether);
@@ -143,7 +143,7 @@ contract FlapTest is DSTest {
         // check no tick
         assertTrue(!Guy(ali).try_tick(id));
         // run past the end
-        hevm.warp(now + 2 weeks);
+        hevm.warp(block.timestamp + 2 weeks);
         // check not biddable
         assertTrue(!Guy(ali).try_tend(id, 100 ether, 1 ether));
         assertTrue( Guy(ali).try_tick(id));

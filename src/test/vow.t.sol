@@ -101,7 +101,7 @@ contract VowTest is DSTest {
     }
     function flog(uint wad) internal {
         suck(address(0), wad);  // suck dai into the zero address
-        vow.flog(now);
+        vow.flog(block.timestamp);
     }
     function heal(uint wad) internal {
         vow.heal(rad(wad));
@@ -132,7 +132,7 @@ contract VowTest is DSTest {
         vow.file('wait', uint(100 seconds));
         assertEq(vow.wait(), 100 seconds);
 
-        uint tic = now;                                                                                                                                                       
+        uint tic = block.timestamp;                                                                                                                                                       
         vow.fess(100 ether);                                                     
         hevm.warp(tic + 99 seconds);                                             
         assertTrue(!try_flog(tic) );                                             

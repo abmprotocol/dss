@@ -122,21 +122,21 @@ contract Flopper is LibNote {
         bids[id].bid = bid;
         bids[id].lot = lot;
         bids[id].guy = gal;
-        bids[id].end = add(uint48(now), tau);
+        bids[id].end = add(uint48(block.timestamp), tau);
 
         emit Kick(id, lot, bid, gal);
     }
     function tick(uint id) external note {
-        require(bids[id].end < now, "Flopper/not-finished");
+        require(bids[id].end < block.timestamp, "Flopper/not-finished");
         require(bids[id].tic == 0, "Flopper/bid-already-placed");
         bids[id].lot = mul(pad, bids[id].lot) / ONE;
-        bids[id].end = add(uint48(now), tau);
+        bids[id].end = add(uint48(block.timestamp), tau);
     }
     function dent(uint id, uint lot, uint bid) external note {
         require(live == 1, "Flopper/not-live");
         require(bids[id].guy != address(0), "Flopper/guy-not-set");
-        require(bids[id].tic > now || bids[id].tic == 0, "Flopper/already-finished-tic");
-        require(bids[id].end > now, "Flopper/already-finished-end");
+        require(bids[id].tic > block.timestamp || bids[id].tic == 0, "Flopper/already-finished-tic");
+        require(bids[id].end > block.timestamp, "Flopper/already-finished-end");
 
         require(bid == bids[id].bid, "Flopper/not-matching-bid");
         require(lot <  bids[id].lot, "Flopper/lot-not-lower");
@@ -155,11 +155,11 @@ contract Flopper is LibNote {
         }
 
         bids[id].lot = lot;
-        bids[id].tic = add(uint48(now), ttl);
+        bids[id].tic = add(uint48(block.timestamp), ttl);
     }
     function deal(uint id) external note {
         require(live == 1, "Flopper/not-live");
-        require(bids[id].tic != 0 && (bids[id].tic < now || bids[id].end < now), "Flopper/not-finished");
+        require(bids[id].tic != 0 && (bids[id].tic < block.timestamp || bids[id].end < block.timestamp), "Flopper/not-finished");
         gem.mint(bids[id].guy, bids[id].lot);
         delete bids[id];
     }

@@ -47,7 +47,7 @@ interface VatLike {
 
       - `ETHJoin`: For native Ether.
 
-      - `DaiJoin`: For connecting internal Dai balances to an external
+      - `dotBtcJoin`: For connecting internal dotBtc balances to an external
                    `DSToken` implementation.
 
     In practice, adapter implementations will be varied and specific to
@@ -101,13 +101,13 @@ contract GemJoin is LibNote {
     }
 }
 
-contract DaiJoin is LibNote {
+contract dotBtcJoin is LibNote {
     // --- Auth ---
     mapping (address => uint) public wards;
     function rely(address usr) external note auth { wards[usr] = 1; }
     function deny(address usr) external note auth { wards[usr] = 0; }
     modifier auth {
-        require(wards[msg.sender] == 1, "DaiJoin/not-authorized");
+        require(wards[msg.sender] == 1, "dotBtcJoin/not-authorized");
         _;
     }
 
@@ -133,7 +133,7 @@ contract DaiJoin is LibNote {
         dai.burn(msg.sender, wad);
     }
     function exit(address usr, uint wad) external note {
-        require(live == 1, "DaiJoin/not-live");
+        require(live == 1, "dotBtcJoin/not-live");
         vat.move(msg.sender, address(this), mul(ONE, wad));
         dai.mint(usr, wad);
     }

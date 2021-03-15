@@ -125,7 +125,7 @@ contract FlopTest is DSTest {
         assertEq(lot, 200 ether);
         assertTrue(guy == gal);
         assertEq(uint256(tic), 0);
-        assertEq(uint256(end), now + flop.tau());
+        assertEq(uint256(end), block.timestamp + flop.tau());
     }
 
     function test_dent() public {
@@ -146,7 +146,7 @@ contract FlopTest is DSTest {
         // gal receives no more
         assertEq(vat.dai(gal), 10 ether);
 
-        hevm.warp(now + 5 weeks);
+        hevm.warp(block.timestamp + 5 weeks);
         assertEq(gem.totalSupply(),  0 ether);
         gem.setOwner(address(flop));
         Guy(bob).deal(id);
@@ -178,7 +178,7 @@ contract FlopTest is DSTest {
         // gal receives no more
         assertEq(vat.dai(gal), 10 ether);
 
-        hevm.warp(now + 5 weeks);
+        hevm.warp(block.timestamp + 5 weeks);
         assertEq(gem.totalSupply(),  0 ether);
         gem.setOwner(address(flop));
         Guy(bob).deal(id);
@@ -202,7 +202,7 @@ contract FlopTest is DSTest {
         // check no tick
         assertTrue(!Guy(ali).try_tick(id));
         // run past the end
-        hevm.warp(now + 2 weeks);
+        hevm.warp(block.timestamp + 2 weeks);
         // check not biddable
         assertTrue(!Guy(ali).try_dent(id, 100 ether, 10 ether));
         assertTrue( Guy(ali).try_tick(id));
@@ -218,7 +218,7 @@ contract FlopTest is DSTest {
         // be refundable to the creator. Rather, it ticks indefinitely.
         uint id = Gal(gal).kick(flop, /*lot*/ 200 ether, /*bid*/ 10 ether);
         assertTrue(!Guy(ali).try_deal(id));
-        hevm.warp(now + 2 weeks);
+        hevm.warp(block.timestamp + 2 weeks);
         assertTrue(!Guy(ali).try_deal(id));
         assertTrue( Guy(ali).try_tick(id));
         assertTrue(!Guy(ali).try_deal(id));

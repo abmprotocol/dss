@@ -126,7 +126,7 @@ contract Flipper is LibNote {
         bids[id].bid = bid;
         bids[id].lot = lot;
         bids[id].guy = msg.sender;  // configurable??
-        bids[id].end = add(uint48(now), tau);
+        bids[id].end = add(uint48(block.timestamp), tau);
         bids[id].usr = usr;
         bids[id].gal = gal;
         bids[id].tab = tab;
@@ -136,14 +136,14 @@ contract Flipper is LibNote {
         emit Kick(id, lot, bid, tab, usr, gal);
     }
     function tick(uint256 id) external note {
-        require(bids[id].end < now, "Flipper/not-finished");
+        require(bids[id].end < block.timestamp, "Flipper/not-finished");
         require(bids[id].tic == 0, "Flipper/bid-already-placed");
-        bids[id].end = add(uint48(now), tau);
+        bids[id].end = add(uint48(block.timestamp), tau);
     }
     function tend(uint256 id, uint256 lot, uint256 bid) external note {
         require(bids[id].guy != address(0), "Flipper/guy-not-set");
-        require(bids[id].tic > now || bids[id].tic == 0, "Flipper/already-finished-tic");
-        require(bids[id].end > now, "Flipper/already-finished-end");
+        require(bids[id].tic > block.timestamp || bids[id].tic == 0, "Flipper/already-finished-tic");
+        require(bids[id].end > block.timestamp, "Flipper/already-finished-end");
 
         require(lot == bids[id].lot, "Flipper/lot-not-matching");
         require(bid <= bids[id].tab, "Flipper/higher-than-tab");
@@ -157,12 +157,12 @@ contract Flipper is LibNote {
         vat.move(msg.sender, bids[id].gal, bid - bids[id].bid);
 
         bids[id].bid = bid;
-        bids[id].tic = add(uint48(now), ttl);
+        bids[id].tic = add(uint48(block.timestamp), ttl);
     }
     function dent(uint256 id, uint256 lot, uint256 bid) external note {
         require(bids[id].guy != address(0), "Flipper/guy-not-set");
-        require(bids[id].tic > now || bids[id].tic == 0, "Flipper/already-finished-tic");
-        require(bids[id].end > now, "Flipper/already-finished-end");
+        require(bids[id].tic > block.timestamp || bids[id].tic == 0, "Flipper/already-finished-tic");
+        require(bids[id].end > block.timestamp, "Flipper/already-finished-end");
 
         require(bid == bids[id].bid, "Flipper/not-matching-bid");
         require(bid == bids[id].tab, "Flipper/tend-not-finished");
@@ -176,10 +176,10 @@ contract Flipper is LibNote {
         vat.flux(ilk, address(this), bids[id].usr, bids[id].lot - lot);
 
         bids[id].lot = lot;
-        bids[id].tic = add(uint48(now), ttl);
+        bids[id].tic = add(uint48(block.timestamp), ttl);
     }
     function deal(uint256 id) external note {
-        require(bids[id].tic != 0 && (bids[id].tic < now || bids[id].end < now), "Flipper/not-finished");
+        require(bids[id].tic != 0 && (bids[id].tic < block.timestamp || bids[id].end < block.timestamp), "Flipper/not-finished");
         cat.claw(bids[id].tab);
         vat.flux(ilk, address(this), bids[id].guy, bids[id].lot);
         delete bids[id];

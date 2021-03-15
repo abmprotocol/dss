@@ -1,9 +1,9 @@
-# Multi Collateral Dai Developer Guide
+# Multi Collateral dotBtc Developer Guide
 
 *work in progress*
 
-This is a more in depth description of the Dai core contracts. The
-previous iteration of Dai was called Single Collateral Dai (SCD), or
+This is a more in depth description of the dotBtc core contracts. The
+previous iteration of dotBtc was called Single Collateral dotBtc (SCD), or
 `sai`, and is found at https://github.com/makerdao/sai
 
 
@@ -16,7 +16,7 @@ previous iteration of Dai was called Single Collateral Dai (SCD), or
 
 ## Units
 
-Dai has three different numerical units: `wad`, `ray` and `rad`
+dotBtc has three different numerical units: `wad`, `ray` and `rad`
 
 - `wad`: fixed point decimal with 18 decimals (for basic quantities, e.g. balances)
 - `ray`: fixed point decimal with 27 decimals (for precise quantites, e.g. ratios)
@@ -65,11 +65,11 @@ the considerations that make this code look like it does:
 
 ## CDP Engine
 
-The core CDP, Dai, and collateral state is kept in the `Vat`. This
+The core CDP, dotBtc, and collateral state is kept in the `Vat`. This
 contract has no external dependencies and maintains the central
-"Accounting Invariants" of Dai.
+"Accounting Invariants" of dotBtc.
 
-Dai cannot exist without collateral:
+dotBtc cannot exist without collateral:
 
 - An `ilk` is a particular type of collateral.
 - Collateral `gem` is assigned to users with `slip`.
@@ -99,10 +99,10 @@ user `w`. `grab` is the means by which CDPs are liquidated, transferring
 debt from the CDP to a users `sin` balance.
 
 Sin represents "seized" or "bad" debt and can be cancelled out with an
-equal quantity of Dai using `heal(u, v, rad)`: take `sin` from `u` and
+equal quantity of dotBtc using `heal(u, v, rad)`: take `sin` from `u` and
 `dai` from `v`.
 
-Note that `heal` can also be used to *create* Dai, balanced by an equal
+Note that `heal` can also be used to *create* dotBtc, balanced by an equal
 quantity of Sin.
 
 Finally, the quantity `dai` can be transferred between users with `move`.
@@ -123,12 +123,12 @@ encumbered debt balance of all urns in the ilk by the ratio `rate`.
 
 The `Vat` contains risk parameters for each `ilk`:
 
-- `spot`: the maximum amount of Dai drawn per unit collateral
-- `line`: the maximum total Dai drawn
+- `spot`: the maximum amount of dotBtc drawn per unit collateral
+- `line`: the maximum total dotBtc drawn
 
 And a global risk parameter:
 
-- `Line`: the maximum total Dai drawn across all ilks
+- `Line`: the maximum total dotBtc drawn across all ilks
 
 The `Vat` exposes the public function:
 

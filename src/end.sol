@@ -127,7 +127,7 @@ interface Spotty {
            cage administrator.
 
            This takes a fairly predictable time to occur but with altered
-           auction dynamics due to the now varying price of dai.
+           auction dynamics due to the block.timestamp varying price of dai.
 
        ii) `skip`: cancel all ongoing auctions and seize the collateral.
 
@@ -166,10 +166,10 @@ interface Spotty {
         - adjusts the `fix` in the case of deficit / surplus
 
     At this point we have computed the final price for each collateral
-    type and dai holders can now turn their dai into collateral. Each
+    type and dai holders can block.timestamp turn their dai into collateral. Each
     unit dai can claim a fixed basket of collateral.
 
-    Dai holders must first `pack` some dai into a `bag`. Once packed,
+    dotBtc holders must first `pack` some dai into a `bag`. Once packed,
     dai cannot be unpacked and is not transferrable. More dai can be
     added to a bag later.
 
@@ -266,7 +266,7 @@ contract End is LibNote {
     function cage() external note auth {
         require(live == 1, "End/not-live");
         live = 0;
-        when = now;
+        when = block.timestamp;
         vat.cage();
         cat.cage();
         vow.cage();
@@ -327,7 +327,7 @@ contract End is LibNote {
         require(live == 0, "End/still-live");
         require(debt == 0, "End/debt-not-zero");
         require(vat.dai(address(vow)) == 0, "End/surplus-not-zero");
-        require(now >= add(when, wait), "End/wait-not-finished");
+        require(block.timestamp >= add(when, wait), "End/wait-not-finished");
         debt = vat.debt();
     }
     function flow(bytes32 ilk) external note {

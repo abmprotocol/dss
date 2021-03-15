@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// jug.sol -- Dai Lending Rate
+/// jug.sol -- dotBtc Lending Rate
 
 // Copyright (C) 2018 Rain <rainbreak@riseup.net>
 //
@@ -100,10 +100,10 @@ contract Jug is LibNote {
         Ilk storage i = ilks[ilk];
         require(i.duty == 0, "Jug/ilk-already-init");
         i.duty = ONE;
-        i.rho  = now;
+        i.rho  = block.timestamp;
     }
     function file(bytes32 ilk, bytes32 what, uint data) external note auth {
-        require(now == ilks[ilk].rho, "Jug/rho-not-updated");
+        require(block.timestamp == ilks[ilk].rho, "Jug/rho-not-updated");
         if (what == "duty") ilks[ilk].duty = data;
         else revert("Jug/file-unrecognized-param");
     }
@@ -118,10 +118,10 @@ contract Jug is LibNote {
 
     // --- Stability Fee Collection ---
     function drip(bytes32 ilk) external note returns (uint rate) {
-        require(now >= ilks[ilk].rho, "Jug/invalid-now");
+        require(block.timestamp >= ilks[ilk].rho, "Jug/invalid-block.timestamp");
         (, uint prev) = vat.ilks(ilk);
-        rate = rmul(rpow(add(base, ilks[ilk].duty), now - ilks[ilk].rho, ONE), prev);
+        rate = rmul(rpow(add(base, ilks[ilk].duty), block.timestamp - ilks[ilk].rho, ONE), prev);
         vat.fold(ilk, vow, diff(rate, prev));
-        ilks[ilk].rho = now;
+        ilks[ilk].rho = block.timestamp;
     }
 }
