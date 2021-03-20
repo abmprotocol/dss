@@ -57,6 +57,11 @@ contract Spotter is LibNote {
       uint256 spot  // [ray]
     );
 
+     event Bull(
+      bytes32 par,
+      uint256 value  // [ray]
+    );
+
     // --- Init ---
     constructor(address vat_) public {
         wards[msg.sender] = 1;
@@ -98,6 +103,18 @@ contract Spotter is LibNote {
         uint256 spot = has ? rdiv(rdiv(mul(uint(val), 10 ** 9), par), ilks[ilk].mat) : 0;
         vat.file(ilk, "spot", spot);
         emit Poke(ilk, val, spot);
+    }  
+
+     // --- Update dotBTC value ---
+    function bull() external {
+        require(live == 1, "Spotter/not-live");
+        bytes32 ilk = bytes32("WBTC-A");
+        (bytes32 val, bool has) = ilks[ilk].pip.peek(); //call to get latest btc price
+        uint256 dot = has ? mul(uint(val), 10 ** 9) : 0;
+        require(dot > 0, "dot/not-greater-than-zero");
+        require(dot > par, "dot/less-than-previous-value");
+        par = dot;
+        emit Bull(bytes32("par"), par);
     }
 
     function cage() external note auth {
