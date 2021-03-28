@@ -110,7 +110,7 @@ contract Spotter is LibNote {
         require(live == 1, "Spotter/not-live");
         bytes32 ilk = bytes32("WBTC-A");
         (bytes32 val, bool has) = ilks[ilk].pip.peek(); //call to get latest btc price
-        uint256 dot = has ? mul(uint(val), 10 ** 9) : 0;
+        uint256 dot = has ? mul(uint(val), 10 ** 27) : 0;
         require(dot > 0, "dot/not-greater-than-zero");
         require(dot > par, "dot/less-than-previous-value");
         par = dot;
