@@ -120,7 +120,6 @@ contract Spotter is LibNote {
     function updatePar(uint data) external {
         require(live == 1, "Spotter/not-live");
         par = data;
-        else revert("Spotter/file-unrecognized-param");
     }
 
     function getPar() internal pure returns (uint z) {
