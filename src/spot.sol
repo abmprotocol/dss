@@ -122,7 +122,7 @@ contract Spotter is LibNote {
         par = data;
     }
 
-    function getPar() internal pure returns (uint z) {
+    function getPar() internal view returns (uint z) {
         z = par;
     }
 
