@@ -117,6 +117,10 @@ contract Spotter is LibNote {
         emit Bull(bytes32("par"), par);
     }
 
+    function setPar(uint256 value) external{
+      par = value;
+    }
+
     function cage() external note auth {
         live = 0;
     }
