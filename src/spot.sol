@@ -112,7 +112,7 @@ contract Spotter is LibNote {
         (bytes32 val, bool has) = ilks[ilk].pip.peek(); //call to get latest btc price
         uint256 dot = has ? rdiv(1,uint(val)) : 0;
         require(dot > 0, "dot/not-greater-than-zero");
-        require(dot > par, "dot/less-than-previous-value");
+        require(dot < par, "dot/less-than-previous-value");
         par = dot;
         emit Bull(bytes32("par"), par);
     }
